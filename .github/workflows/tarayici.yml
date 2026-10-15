@@ -12,6 +12,9 @@ jobs:
       - name: Kodu al
         uses: actions/checkout@v4
 
+      - name: Zip'i ac
+        run: unzip -q Turkuaz-Android.zip -d proje
+
       - name: Java 17
         uses: actions/setup-java@v4
         with:
@@ -27,13 +30,15 @@ jobs:
           gradle-version: '8.9'
 
       - name: APK derle
+        working-directory: proje
         run: gradle assembleRelease --no-daemon --stacktrace
 
       - name: Dosyayı adlandır
+        working-directory: proje
         run: |
           V=$(tr -d '[:space:]' < VERSION)
-          mkdir -p cikti
-          cp app/build/outputs/apk/release/app-release.apk "cikti/Turkuaz-$V.apk"
+          mkdir -p ../cikti
+          cp app/build/outputs/apk/release/app-release.apk "../cikti/Turkuaz-$V.apk"
 
       - name: APK'yı yükle
         uses: actions/upload-artifact@v4
